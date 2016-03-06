@@ -1,6 +1,8 @@
 defmodule Todo.Server do
   use Supervisor
 
+  alias Todo.Cache
+
   def add_list(name) do
     Supervisor.start_child(__MODULE__, [name])
   end
@@ -26,7 +28,9 @@ defmodule Todo.Server do
   ###
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+    state = Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+    Enum.each(Cache.index, &add_list/1)
+    state
   end
 
   def init(_) do

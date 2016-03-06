@@ -23,4 +23,14 @@ defmodule Todo.CacheTest do
     Cache.clear
     refute Cache.find(list.name)
   end
+
+  test ".index gets a list of all keys", %{list: list} do
+    assert Cache.index == [list.name]
+    Cache.clear
+    assert Cache.index == []
+  end
+
+  test ".find_all gets all objects", %{list: list} do
+    assert Cache.find_all == [list]
+  end
 end

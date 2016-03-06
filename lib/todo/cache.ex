@@ -13,6 +13,23 @@ defmodule Todo.Cache do
     end
   end
 
+  def find_all do
+    Enum.map(index, &find/1)
+  end
+
+  def index do
+    build_index(:ets.first(__MODULE__), [])
+  end
+
+  defp build_index(key, acc) do
+    if key == :"$end_of_table" do 
+      acc
+    else 
+      next_key = :ets.next(__MODULE__, key) 
+      build_index(next_key, [to_string(key) | acc])
+    end
+  end
+
   def clear do
     :ets.delete_all_objects(__MODULE__)
   end
