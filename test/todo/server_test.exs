@@ -36,4 +36,11 @@ defmodule Todo.ServerTest do
 
     assert counts.active == 0
   end
+
+  test "re-adds lists from cache on server crash" do
+    Server.add_list("Test")
+    Supervisor.restart_child(Todo.Supervisor, Server)
+    assert Supervisor.count_children(Server).active == 1
+  end
+
 end
